@@ -20,6 +20,8 @@ the command `install.packages("plyr")`. The script loads it when needed.
 ## Working
 
 ### Step 1
+> Merges the training and the test sets to create one data set.
+
 The *test* dataset is created. `X_test` holds the data collected, `Y_test` holds
 the activity details and `subject_test` holds the subject IDs. In the absence
 of any common variable to merge, I have assumed that the data is to be merged
@@ -47,4 +49,31 @@ Eventally, `rbind` is used to merge the *test* and *train* datasets to create
 
 ```
 testrain <- rbind(test, train)
+```
+
+### Step 2
+> Extracts only the measurements on the mean and standard deviation for
+each measurement.
+
+A new object `features` is created, which is a data frame consisting of all
+variable names. 
+
+```
+features <- read.table("features.txt")
+```
+
+Another object `meanStdCols` is created which contains the column numbers for
+all the variables which have mean or standard deviation data. The `grep()`
+function was used to match the regular expression `mean|std` with the varaible
+names.
+
+```
+meanStdCols <- grep("mean|std", as.character(features$V2))
+```
+
+The relevant data is stored by subsetting `testrain` into another object
+`meanStdData`.
+
+```
+meanStdData <- testrain[,c(1,2,meanStdCols + 2)]
 ```
