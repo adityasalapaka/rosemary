@@ -13,6 +13,6 @@ upstairs, walking downstairs, sitting, standing and laying.
 the setwd() command in R.
 - Please do not change any of the file names. 
 - run_analysis.R makes use of the "plyr" package. This can be installed by 
-the command 'r install.packages("plyr")'. The script loads it when needed.
+the command `install.packages("plyr")`. The script loads it when needed.
 
 # Working
