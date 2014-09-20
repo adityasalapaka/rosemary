@@ -77,3 +77,64 @@ The relevant data is stored by subsetting `testrain` into another object
 ```
 meanStdData <- testrain[,c(1,2,meanStdCols + 2)]
 ```
+
+### Step 3
+> Uses descriptive activity names to name the activities in the data set.
+
+A new object `activity_labels` is created which stores the activity lables.
+
+```
+activity_labels <-  read.table("activity_labels.txt")
+```
+
+A `for` loop is run over `meanStdData` which replaces activity IDs with the 
+corresponding activity labels. The `sapply` function is used for this purpose.
+
+```
+for (i in 1:6){
+        meanStdData[,2] <- sapply(meanStdData[,2], function(x) 
+                ifelse(x == activity_labels[1][i,], 
+                       as.vector(activity_labels[2][i,]), x))
+}
+```
+
+### Step 4
+> Appropriately labels the data set with descriptive variable names.
+
+The variables names are taken from `features` and assigned to the columns of 
+`meanStdData`. `meanStdCols` already stored the relevant column numbers.
+
+```
+colnames(meanStdData) <- c("Subject", "Activity", 
+                           as.character(features$V2[meanStdCols]))
+```
+
+The data is then sorted according to subject in a new object `sortedData`.
+
+```
+sortedData <- meanStdData[order(meanStdData$Subject),]
+```
+
+### Step 5
+> From the data set in step 4, creates a second, independent tidy data set with
+the average of each variable for each activity and each subject.
+
+The `ddply` function is used in the `plyr` package to split data by subject and
+activity, and the find the average of each variable. The new data frame is 
+stored in `finalData`.
+
+```
+finalData <- ddply(sortedData, .(Subject, Activity), 
+                   function(x) colMeans(x[3:81]))
+```
+
+Finally, `write.table()` is used to write `finalData` into a text file. As per
+the instructions, row names are omitted. 
+
+```
+write.table(finalData, file = "tidy_data.txt", row.name = FALSE)
+```
+
+## Conclusion
+To read the newly created tidy dataset, the `read.table()` function may be used 
+with the argument `header = FALSE`.

@@ -23,7 +23,7 @@ meanStdCols <- grep("mean|std", as.character(features$V2))
 meanStdData <- testrain[,c(1,2,meanStdCols + 2)]
 
 ## Step 3: Uses descriptive activity names to name the activities in the data 
-## set
+## set.
 
 activity_labels <-  read.table("activity_labels.txt")
 
