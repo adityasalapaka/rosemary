@@ -109,22 +109,25 @@ colnames(meanStdData) <- c("Subject", "Activity",
                            as.character(features$V2[meanStdCols]))
 ```
 
-The data is then sorted according to subject in a new object `sortedData`.
-
-```
-sortedData <- meanStdData[order(meanStdData$Subject),]
-```
-
 ### Step 5
 > From the data set in step 4, creates a second, independent tidy data set with
 the average of each variable for each activity and each subject.
+
+To prevent `ddply` from ordering the data by activity, the acitvity column is
+forced to be ordered by the order given in `activity_labels`.
+
+```
+meanStdData$Activity <- factor(meanStdData$Activity, 
+                               levels = as.vector(activity_labels$V2), 
+                               ordered = TRUE)
+```
 
 The `ddply` function is used in the `plyr` package to split data by subject and
 activity, and the find the average of each variable. The new data frame is 
 stored in `finalData`.
 
 ```
-finalData <- ddply(sortedData, .(Subject, Activity), 
+finalData <- ddply(meanStdData, .(Subject, Activity), 
                    function(x) colMeans(x[3:81]))
 ```
 
@@ -137,4 +140,4 @@ write.table(finalData, file = "tidy_data.txt", row.name = FALSE)
 
 ## Conclusion
 To read the newly created tidy dataset, the `read.table()` function may be used 
-with the argument `header = FALSE`.
+with the argument `header = TRUE`.

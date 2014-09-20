@@ -38,12 +38,15 @@ for (i in 1:6){
 colnames(meanStdData) <- c("Subject", "Activity", 
                            as.character(features$V2[meanStdCols]))
 
-sortedData <- meanStdData[order(meanStdData$Subject),]
-
 ## Step 5: From the data set in step 4, creates a second, independent tidy data 
 ## set with the average of each variable for each activity and each subject.
 
-finalData <- ddply(sortedData, .(Subject, Activity), 
+
+meanStdData$Activity <- factor(meanStdData$Activity, 
+                               levels = as.vector(activity_labels$V2), 
+                               ordered = TRUE)
+
+finalData <- ddply(meanStdData, .(Subject, Activity), 
                    function(x) colMeans(x[3:81]))
 
 write.table(finalData, file = "tidy_data.txt", row.name = FALSE)
